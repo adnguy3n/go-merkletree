@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/sha1"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"log"
@@ -21,11 +22,10 @@ type node struct {
  * Takes file pathnames as command line arguments and computes their top hash.
  */
 func main() {
-	fmt.Println(os.Args[1:])
-
 	nodes := openFile(os.Args[1:], nil)
 	topNode := buildTree(nodes)
-	fmt.Println(topNode)
+	topHash := hex.EncodeToString(topNode.hash)
+	fmt.Println(topHash)
 }
 
 /*
