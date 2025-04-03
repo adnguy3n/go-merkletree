@@ -81,5 +81,34 @@ func buildTree(nodes []node) node {
 		}
 	}
 
+	//newLevel := buildNextLevel(nodes, nil)
+
 	return buildTree(newLevel)
 }
+
+/*
+ * Recursive version of creating the next level of nodes.
+ * Written just to try it out.
+ */
+/*
+func buildNextLevel(nodes, newLevel []node) []node {
+	switch len(nodes) {
+	case 0:
+		return newLevel
+
+	case 1:
+		combinedHash := append(nodes[0].hash, nodes[0].hash...)
+		fileHash := sha1.New()
+		fileHash.Write(combinedHash)
+		newLevel = append(newLevel, node{hash: fileHash.Sum(nil), left: &nodes[0]})
+		return buildNextLevel(nil, newLevel)
+	default:
+		combinedHash := append(nodes[0].hash, nodes[1].hash...)
+		fileHash := sha1.New()
+		fileHash.Write(combinedHash)
+		newLevel = append(newLevel, node{hash: fileHash.Sum(nil), left: &nodes[0], right: &nodes[1]})
+	}
+
+	return buildNextLevel(nodes[2:], newLevel)
+}
+*/
