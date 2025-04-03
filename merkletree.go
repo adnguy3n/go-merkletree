@@ -36,12 +36,10 @@ func openFile(args []string, nodes []node) []node {
 		return nodes
 	}
 
-	file, err := os.Open(os.Args[0])
+	file, err := os.Open(args[0])
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	defer file.Close()
 
 	fileHash := sha1.New()
 	if _, err := io.Copy(fileHash, file); err != nil {
