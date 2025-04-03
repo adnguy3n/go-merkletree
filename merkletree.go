@@ -20,6 +20,7 @@ type node struct {
 
 /*
  * Takes file pathnames as command line arguments and computes their top hash.
+ * TODO: Print out entire tree.
  */
 func main() {
 	nodes := openFile(os.Args[1:], nil)
@@ -55,7 +56,11 @@ func openFile(args []string, nodes []node) []node {
  * Build the Merkle Tree from the bottom-up.
  */
 func buildTree(nodes []node) node {
-	if len(nodes) == 0 || len(nodes) == 1 {
+	if len(nodes) == 0 {
+		log.Fatal("There should not be 0 nodes.")
+	}
+
+	if len(nodes) == 1 {
 		return nodes[0]
 	}
 
