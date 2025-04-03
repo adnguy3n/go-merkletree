@@ -24,7 +24,8 @@ func main() {
 	fmt.Println(os.Args[1:])
 
 	nodes := openFile(os.Args[1:], nil)
-	fmt.Println(nodes)
+	topNode := buildTree(nodes)
+	fmt.Println(topNode)
 }
 
 /*
@@ -50,4 +51,32 @@ func openFile(args []string, nodes []node) []node {
 	nodes = append(nodes, node{hash: fileHash.Sum(nil)})
 
 	return openFile(args[1:], nodes)
+}
+
+/*
+ * Build the Merkle Tree from the bottom-up.
+ */
+func buildTree(nodes []node) node {
+	if len(nodes) == 0 || len(nodes) == 1 {
+		return nodes[0]
+	}
+
+	var newLevel []node
+
+	for i := 0; i < len(nodes); i += 2 {
+		if i+1 < len(nodes) {
+			combinedHash := append(nodes[i].hash, nodes[i+1].hash...)
+			fileHash := sha1.New()
+			fileHash.Write(combinedHash)
+			newLevel = append(newLevel, node{hash: fileHash.Sum(nil), left: &nodes[i], right: &nodes[i+1]})
+		} else {
+			// Use duplicate of last node if there is an odd number.
+			combinedHash := append(nodes[i].hash, nodes[i].hash...)
+			fileHash := sha1.New()
+			fileHash.Write(combinedHash)
+			newLevel = append(newLevel, node{hash: fileHash.Sum(nil), left: &nodes[i]})
+		}
+	}
+
+	return buildTree(newLevel)
 }
